@@ -1,10 +1,5 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  text-align: left;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -36,3 +31,4 @@
     transform: rotate(360deg);
   }
 }
+
