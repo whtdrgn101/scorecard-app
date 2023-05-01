@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row'
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 
 export default function Round() {
-    const {id} = useParams()
+    const {id} = useParams();
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -14,13 +17,24 @@ export default function Round() {
       }, []);
 
     return (
-        <Container>
-            <div class="panel panel-primary">
-                <div class="panel-heading">Round on {data.round_date}</div>
-                <div class="panel-body">
-                    <div>Round Score: {data.score_total}</div>
-                </div>
-            </div>
-        </Container>
+        <Form>
+            <Form.Group as={Col} className="mb-3" controlId="formGroupRoundDate">
+                <Form.Label>Date</Form.Label>
+                <Form.Control type="date" placeholder="Select a Date" />
+            </Form.Group>
+            <Row>
+                <Form.Group as={Col} className="mb-3" controlId="formGroupRoundType">
+                    <Form.Label>Round Type</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" />
+                </Form.Group>
+                <Form.Group as={Col} className="mb-3" controlId="formGroupBow">
+                    <Form.Label>Bow</Form.Label>
+                    <Form.Control type="password" placeholder="Password" />
+                </Form.Group>
+            </Row>
+            <Button variant="primary" type="submit">
+                Submit
+            </Button>
+        </Form>
     );
 }
