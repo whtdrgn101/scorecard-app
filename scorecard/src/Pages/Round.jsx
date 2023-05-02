@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import UserConext from '../Components/User/User';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
@@ -7,15 +8,17 @@ import { useParams } from "react-router";
 
 export default function Round() {
     const {id} = useParams();
+    const user = useContext(UserConext);
     const [round, setRound] = useState([]);
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
-
+    const baseURL = 'http://localhost:8008';
+    const baseUserUrl = baseURL + '/user/' + user.id
     useEffect(() => {
-        fetch('http://localhost:8008/user/1000/round/' + id)
+        fetch( baseUserUrl + '/round/' + id)
             .then(response => response.json())
             .then(round => { 
                 if(round.id) {
@@ -26,11 +29,11 @@ export default function Round() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch('http://localhost:8008/round-type')
+        fetch(baseURL + '/round-type')
           .then(response => response.json())
           .then(roundTypes => setRoundTypes(roundTypes))
           .catch(error => console.error(error));
-        fetch('http://localhost:8008/user/1000/bow')
+        fetch(baseUserUrl + '/bow')
           .then(response => response.json())
           .then(bows => setBows(bows))
           .catch(error => console.error(error));

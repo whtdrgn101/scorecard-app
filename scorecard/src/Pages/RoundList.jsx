@@ -1,15 +1,16 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import Container from 'react-bootstrap/Container';
+import UserConext from '../Components/User/User';
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 
 function RoundList() {
-
+    const user = useContext(UserConext);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8008/user/1000/round')
+        fetch('http://localhost:8008/user/' + user.id + '/round')
           .then(response => response.json())
           .then(data => setData(data))
           .catch(error => console.error(error));
@@ -32,7 +33,7 @@ function RoundList() {
       })
     return (
         <Container>
-            <h3>Most Recent Rounds for User</h3>
+            <h3>Most Recent Rounds for {user.name}</h3>
             <Table striped bordered hover responsive>
                 <caption>Most Recent Rounds for User</caption>
                 <thead>
