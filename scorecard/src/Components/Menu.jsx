@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
 export default function Menu() {
-  const user = useContext(UserConext);
+  const session = useContext(UserConext);
   function Profile() {
     return <Nav className="gap-2"><Nav.Link className="text-decoration-none text-white" href="/profile">Profile</Nav.Link></Nav>;
   }
@@ -21,9 +21,10 @@ export default function Menu() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link className="text-decoration-none text-white" href="/">Home</Nav.Link>
+            <Nav.Link className="text-decoration-none text-white" href="/bows">Bows</Nav.Link>
             <Nav.Link className="text-decoration-none text-white" href="/rounds">Rounds</Nav.Link>
           </Nav>
-          {user.id ? <Profile />:<Login />}
+          {session.user.id ? <Profile />:<Login />}
         </Navbar.Collapse>
       </Container>
     </Navbar>

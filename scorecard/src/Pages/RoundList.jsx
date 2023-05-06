@@ -6,11 +6,11 @@ import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 
 function RoundList() {
-    const user = useContext(UserConext);
+    const session = useContext(UserConext);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8008/user/' + user.id + '/round')
+        fetch(session.base_url + '/user/' + session.user.id + '/round')
           .then(response => response.json())
           .then(data => setData(data))
           .catch(error => console.error(error));
@@ -33,9 +33,9 @@ function RoundList() {
       })
     return (
         <Container>
-            <h3>Most Recent Rounds for {user.name}</h3>
+            <h3>Most Recent Rounds for {session.user.name}</h3>
             <Table striped bordered hover responsive>
-                <caption>Most Recent Rounds for User</caption>
+                <caption>Most Recent Rounds for {session.user.name}</caption>
                 <thead>
                     <tr>
                         <th>Date</th>

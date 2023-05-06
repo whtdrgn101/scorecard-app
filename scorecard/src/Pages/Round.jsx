@@ -8,15 +8,14 @@ import { useParams } from "react-router";
 
 export default function Round() {
     const {id} = useParams();
-    const user = useContext(UserConext);
+    const session = useContext(UserConext);
     const [round, setRound] = useState([]);
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
-    const baseURL = 'http://localhost:8008';
-    const baseUserUrl = baseURL + '/user/' + user.id
+    const baseUserUrl = session.base_url + '/user/' + session.user.id;
     useEffect(() => {
         fetch( baseUserUrl + '/round/' + id)
             .then(response => response.json())
@@ -29,7 +28,7 @@ export default function Round() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch(baseURL + '/round-type')
+        fetch(session.base_url + '/round-type')
           .then(response => response.json())
           .then(roundTypes => setRoundTypes(roundTypes))
           .catch(error => console.error(error));
