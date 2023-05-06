@@ -1,13 +1,15 @@
 
 import React, { useState, useEffect , useContext} from 'react';
 import Container from 'react-bootstrap/Container';
-import UserConext from '../Components/User/User';
+import UserConext from '../../Components/User/User';
 import Table from 'react-bootstrap/Table';
-import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import { Link, useNavigate } from 'react-router-dom';
 
 function RoundList() {
     const session = useContext(UserConext);
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(session.base_url + '/user/' + session.user.id + '/round')
@@ -35,7 +37,7 @@ function RoundList() {
         <Container>
             <h3>Most Recent Rounds for {session.user.name}</h3>
             <Table striped bordered hover responsive>
-                <caption>Most Recent Rounds for {session.user.name}</caption>
+                <caption><Button onClick={() => navigate('/new-round')}>New Round</Button></caption>
                 <thead>
                     <tr>
                         <th>Date</th>

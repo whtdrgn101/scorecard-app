@@ -60,9 +60,14 @@ export default function NewBow() {
                     </Form.Select>
                 </Form.Group>
             </Row>
-            <Button variant="primary" type="button" onClick={save_bow}>
-                Add New Bow
-            </Button>
+            <Row>
+                <Button variant="secondary" type="button" onClick={() => navigate('/bows')}>
+                    Cancel
+                </Button>
+                <Button variant="primary" type="button" onClick={save_bow}>
+                    Add New Bow
+                </Button>
+            </Row>
         </Form>
     );
 }

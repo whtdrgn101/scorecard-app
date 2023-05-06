@@ -70,10 +70,14 @@ export default function Bow() {
                     </Form.Select>
                 </Form.Group>
             </Row>
-            
-            <Button variant="primary" type="button" onClick={save_bow}>
-                Save Changes
-            </Button>
+            <Row>
+                <Button variant="secondary" type="button" onClick={() => navigate('/bows')}>
+                    Cancel
+                </Button>
+                <Button variant="primary" type="button" onClick={save_bow}>
+                    Save Changes
+                </Button>
+            </Row>
         </Form>
     );
 }

@@ -3,12 +3,13 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import UserConext from './Components/User/User';
 import Home from './Pages/Home';
 import Profile from './Pages/Profile';
-import RoundList from './Pages/RoundList';
-import BowList from './Pages/Bow/BowList';
 import Menu from './Components/Menu';
-import Round from './Pages/Round';
-import Bow from './Pages/Bow/Bow';
+import BowList from './Pages/Bow/BowList';
 import NewBow from './Pages/Bow/NewBow';
+import Bow from './Pages/Bow/Bow';
+import RoundList from './Pages/Round/RoundList';
+import NewRound from './Pages/Round/NewRound';
+import Round from './Pages/Round/Round';
 import './App.css'
 
 const session = {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/new-bow/" element={<NewBow />} />
             <Route path="/rounds" element={<RoundList />} />
             <Route path="/round/:id" element={<Round />} />
+            <Route path="/new-round" element={<NewRound />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </BrowserRouter>

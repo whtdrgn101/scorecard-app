@@ -1,33 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import UserConext from '../Components/User/User';
+import UserConext from '../../Components/User/User';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useParams } from "react-router";
+import { useNavigate } from 'react-router-dom';
 
-export default function Round() {
-    const {id} = useParams();
+export default function NewRound() {
     const session = useContext(UserConext);
-    const [round, setRound] = useState([]);
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
+    const navigate = useNavigate();
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
     const baseUserUrl = session.base_url + '/user/' + session.user.id;
     useEffect(() => {
-        fetch( baseUserUrl + '/round/' + id)
-            .then(response => response.json())
-            .then(round => { 
-                if(round.id) {
-                    setRound(round);
-                    setRoundDate(formatDate(new Date(round.round_date)));
-                    setRoundTypeId(round.round_type_id);
-                    setBowId(round.bow_id);
-                } 
-            })
-            .catch(error => console.error(error));
         fetch(session.base_url + '/round-type')
           .then(response => response.json())
           .then(roundTypes => setRoundTypes(roundTypes))
@@ -37,7 +25,22 @@ export default function Round() {
           .then(bows => setBows(bows))
           .catch(error => console.error(error));
       }, []);
-    
+
+    function save_round() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: session.user.id, round_type_id: roundTypeId, bow_id: bowId, round_date: roundDate + ' 12:00:00', })
+        };
+        fetch(baseUserUrl + '/round', requestOptions)
+            .then(response => response.json())
+            .then(new_round => {
+                if(new_round.id) {
+                    navigate('/round/' + new_round.id);
+                }
+            });
+        return false;
+    }
     return (
         <Form>
             <Row>
@@ -66,9 +69,15 @@ export default function Round() {
                     )}
                 </Form.Select>
             </Form.Group>
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
+            <Row>
+                <Button as={Col} variant="secondary" type="button" onClick={() => navigate('/rounds')}>
+                    Cancel
+                </Button>
+                <Button as={Col} variant="primary" type="button" onClick={save_round} >
+                    Add New Round
+                </Button>   
+            </Row>
+            
         </Form>
     );
 

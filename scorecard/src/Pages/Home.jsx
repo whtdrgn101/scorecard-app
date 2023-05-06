@@ -1,5 +1,5 @@
 import React from 'react';
-import RoundList from './RoundList';
+import RoundList from './Round/RoundList';
 import Container from 'react-bootstrap/Container';
 export default function Home() {
   return (
