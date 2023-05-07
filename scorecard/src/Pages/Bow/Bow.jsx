@@ -48,6 +48,19 @@ export default function Bow() {
             });
         return false;
     }
+    function delete_bow() {
+        
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        fetch(baseUserUrl + '/bow/' + bow.id, requestOptions)
+            .then(response => response.json())
+            .then(new_bow => {
+                navigate('/bows/');
+            });
+        return false;
+    }
     return (
         <Form>
             <Form.Group as={Col} className="mb-3" controlId="formGroupBowName">
@@ -71,11 +84,16 @@ export default function Bow() {
                 </Form.Group>
             </Row>
             <Row>
-                <Button variant="secondary" type="button" onClick={() => navigate('/bows')}>
-                    Cancel
+                <Button as={Col} variant="danger" type="button" onClick={delete_bow}>
+                    Delete
                 </Button>
-                <Button variant="primary" type="button" onClick={save_bow}>
+                <Button as={Col} variant="primary" type="button" onClick={save_bow}>
                     Save Changes
+                </Button>
+            </Row>
+            <Row>
+                <Button as={Col} variant="secondary" type="button" onClick={() => navigate('/bows')}>
+                    Cancel
                 </Button>
             </Row>
         </Form>

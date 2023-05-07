@@ -32,7 +32,7 @@ export default function NewBow() {
             .then(response => response.json())
             .then(new_bow => {
                 if(new_bow.id) {
-                    navigate('/bow/' + new_bow.id);
+                    navigate('/bows');
                 }
             });
         return false;
@@ -61,10 +61,10 @@ export default function NewBow() {
                 </Form.Group>
             </Row>
             <Row>
-                <Button variant="secondary" type="button" onClick={() => navigate('/bows')}>
+                <Button as={Col} variant="secondary" type="button" onClick={() => navigate('/bows')}>
                     Cancel
                 </Button>
-                <Button variant="primary" type="button" onClick={save_bow}>
+                <Button as={Col} variant="primary" type="button" onClick={save_bow}>
                     Add New Bow
                 </Button>
             </Row>
