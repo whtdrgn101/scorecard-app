@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import UserConext from '../../Components/User/User';
+import Confirmation from '../../Components/confirmation';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
@@ -13,6 +14,7 @@ export default function Bow() {
     const [bow, setBow] = useState([]);
     const [bowTypes, setBowTypes] = useState([]);
     const navigate = useNavigate();
+    const [showConfirmation, setShowConfirmation] = useState(false);
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
@@ -49,7 +51,14 @@ export default function Bow() {
         return false;
     }
     function delete_bow() {
-        
+         setShowConfirmation(true);
+    }
+
+    function onCancelHandler() {
+        setShowConfirmation(false);
+    }
+
+    function onConfirmHandler() {
         const requestOptions = {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -96,6 +105,9 @@ export default function Bow() {
                     Cancel
                 </Button>
             </Row>
+            <Confirmation message="Are you sure you want to delete this bow?" 
+                title="Delete Bow Confirmation" show={showConfirmation} confirmButtonText="Delete Bow?"
+                onCancel={onCancelHandler} onConfirm={onConfirmHandler} />
         </Form>
     );
 }

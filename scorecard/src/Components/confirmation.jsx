@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-export default function Confirmation() {
+export default function Confirmation({ show, title, message, onConfirm, onCancel, confirmButtonText }) {
   
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  function setShowState(state) {
-    setShow(state);
-  }
-
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={onCancel}>
     <Modal.Header closeButton>
-        <Modal.Title>Confirm Record Deletion</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
     </Modal.Header>
-    <Modal.Body>Are you sure you wish to delete this record?</Modal.Body>
+    <Modal.Body>{message}</Modal.Body>
     <Modal.Footer>
-        <Button variant="secondary" onClick={setShowState(false)}>
+        <Button variant="secondary" onClick={onCancel}>
         Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-        Save Changes
+        <Button variant="primary" onClick={onConfirm}>
+        {confirmButtonText}
         </Button>
     </Modal.Footer>
     </Modal>

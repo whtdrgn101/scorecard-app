@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import UserConext from '../../Components/User/User';
+import Confirmation from '../../Components/confirmation';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
@@ -14,6 +15,7 @@ export default function Round() {
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
     const navigate = useNavigate();
+    const [showConfirmation, setShowConfirmation] = useState(false);
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
@@ -53,7 +55,25 @@ export default function Round() {
             });
         return false;
     }
+    function delete_round() {
+        setShowConfirmation(true);
+    }
+    function onCancelHandler() {
+        setShowConfirmation(false);
+    }
 
+    function onConfirmHandler() {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        fetch(baseUserUrl + '/round/' + round.id, requestOptions)
+            .then(response => response.json())
+            .then(round_status => {
+                navigate('/rounds/');
+            });
+        return false;
+    }
     return (
         <Form>
             <Row>
@@ -83,13 +103,21 @@ export default function Round() {
                 </Form.Select>
             </Form.Group>
             <Row>
-                <Button as={Col} variant="secondary" type="button" onClick={() => navigate('/rounds')}>
-                    Cancel
+                <Button as={Col} variant="danger" type="button" onClick={delete_round}>
+                    Delete Round
                 </Button>
                 <Button as={Col} variant="primary" type="button" onClick={save_round}>
                     Save Changes
-                </Button>   
+                </Button>  
             </Row>
+            <Row>
+                <Button as={Col} variant="secondary" type="button" onClick={() => navigate('/rounds')}>
+                    Cancel
+                </Button>
+            </Row>
+            <Confirmation message="Are you sure you want to delete this round?" 
+                title="Delete Round Confirmation" show={showConfirmation} confirmButtonText="Delete Round?"
+                onCancel={onCancelHandler} onConfirm={onConfirmHandler} />
         </Form>
     );
 
