@@ -1,22 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
-import UserConext from '../../Components/User/User';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/user/userSlice';
+import { selectBaseUrl } from '../../features/api/apiSlice';
 
 export default function NewRound() {
-    const session = useContext(UserConext);
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
     const navigate = useNavigate();
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
-    const baseUserUrl = session.base_url + '/user/' + session.user.id;
+    const base_url = useSelector(selectBaseUrl);
+    const user = useSelector(selectUser);
+    const baseUserUrl = base_url + '/user/' + user.id;
+
     useEffect(() => {
-        fetch(session.base_url + '/round-type')
+        fetch(base_url + '/round-type')
           .then(response => response.json())
           .then(roundTypes => setRoundTypes(roundTypes))
           .catch(error => console.error(error));
@@ -30,7 +34,7 @@ export default function NewRound() {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: session.user.id, round_type_id: roundTypeId, bow_id: bowId, round_date: roundDate + ' 12:00:00', })
+            body: JSON.stringify({ user_id: user.id, round_type_id: roundTypeId, bow_id: bowId, round_date: roundDate + ' 12:00:00', })
         };
         fetch(baseUserUrl + '/round', requestOptions)
             .then(response => response.json())
@@ -51,7 +55,7 @@ export default function NewRound() {
                 <Form.Group as={Col} className="mb-3" controlId="formGroupRoundType">
                     <Form.Label>Round Type</Form.Label>
                     <Form.Select onChange={e => setRoundTypeId(e.target.value)} value={roundTypeId}>
-                        <option>Open this select menu</option>
+                        <option>Select Type</option>
                         {roundTypes.map(rtype => (
                             <option key={`${rtype.id}`} value={`${rtype.id}`}>{rtype.name}</option>                       
                         )
@@ -62,7 +66,7 @@ export default function NewRound() {
             <Form.Group as={Col} className="mb-3" controlId="formGroupBow">
                 <Form.Label>Bow</Form.Label>
                 <Form.Select onChange={e => setBowId(e.target.value)} value={bowId}>
-                    <option>Open this select menu</option>
+                    <option>Select Bow</option>
                     {bows.map(bow => (
                         <option key={`${bow.id}`} value={`${bow.id}`}>{bow.name}</option>                       
                     )

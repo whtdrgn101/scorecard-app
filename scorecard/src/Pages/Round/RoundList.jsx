@@ -1,18 +1,21 @@
 
 import React, { useState, useEffect , useContext} from 'react';
 import Container from 'react-bootstrap/Container';
-import UserConext from '../../Components/User/User';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/user/userSlice';
+import { selectBaseUrl } from '../../features/api/apiSlice';
 
 function RoundList() {
-    const session = useContext(UserConext);
     const [data, setData] = useState([]);
     const navigate = useNavigate();
+    const base_url = useSelector(selectBaseUrl);
+    const user = useSelector(selectUser);
 
     useEffect(() => {
-        fetch(session.base_url + '/user/' + session.user.id + '/round')
+        fetch(base_url + '/user/' + user.id + '/round')
           .then(response => response.json())
           .then(data => setData(data))
           .catch(error => console.error(error));
@@ -35,7 +38,7 @@ function RoundList() {
       })
     return (
         <Container>
-            <h3>Most Recent Rounds for {session.user.name}</h3>
+            <h3>Most Recent Rounds for {user && user.name}</h3>
             <Table striped bordered hover responsive>
                 <caption><Button onClick={() => navigate('/new-round')}>New Round</Button></caption>
                 <thead>

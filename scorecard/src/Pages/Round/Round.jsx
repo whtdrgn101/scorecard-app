@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import UserConext from '../../Components/User/User';
 import Confirmation from '../../Components/confirmation';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
@@ -7,10 +6,12 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/user/userSlice';
+import { selectBaseUrl } from '../../features/api/apiSlice';
 
 export default function Round() {
     const {id} = useParams();
-    const session = useContext(UserConext);
     const [round, setRound] = useState([]);
     const [roundTypes, setRoundTypes] = useState([]);
     const [bows, setBows] = useState([]);
@@ -19,7 +20,10 @@ export default function Round() {
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
-    const baseUserUrl = session.base_url + '/user/' + session.user.id;
+    const base_url = useSelector(selectBaseUrl);
+    const user = useSelector(selectUser);
+    const baseUserUrl = base_url + '/user/' + user.id;
+
     useEffect(() => {
         fetch( baseUserUrl + '/round/' + id)
             .then(response => response.json())
@@ -32,7 +36,7 @@ export default function Round() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch(session.base_url + '/round-type')
+        fetch(base_url + '/round-type')
           .then(response => response.json())
           .then(roundTypes => setRoundTypes(roundTypes))
           .catch(error => console.error(error));
@@ -46,7 +50,7 @@ export default function Round() {
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: round.id, user_id: session.user.id, round_type_id: roundTypeId, bow_id: bowId, round_date: roundDate + ' 12:00:00', created_date: round.created_date})
+            body: JSON.stringify({ id: round.id, user_id: user.id, round_type_id: roundTypeId, bow_id: bowId, round_date: roundDate + ' 12:00:00', created_date: round.created_date})
         };
         fetch(baseUserUrl + '/round/' + round.id, requestOptions)
             .then(response => response.json())

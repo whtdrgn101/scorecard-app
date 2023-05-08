@@ -1,22 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react';
-import UserConext from '../../Components/User/User';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/user/userSlice';
+import { selectBaseUrl } from '../../features/api/apiSlice';
 
 export default function NewBow() {
-    const session = useContext(UserConext);
     const [bowTypes, setBowTypes] = useState([]);
     const navigate = useNavigate();
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
-    const baseUserUrl = session.base_url + '/user/' + session.user.id;
+    const base_url = useSelector(selectBaseUrl);
+    const user = useSelector(selectUser);
+    const baseUserUrl = base_url + '/user/' + user.id;
 
     useEffect(() => {
-        fetch(session.base_url + '/bow-type')
+        fetch(base_url + '/bow-type')
           .then(response => response.json())
           .then(bowTypes => setBowTypes(bowTypes))
           .catch(error => console.error(error));
@@ -26,7 +29,7 @@ export default function NewBow() {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: session.user.id, bow_type_id: bowTypeId, name: bowName, draw_weight: drawWeight, })
+            body: JSON.stringify({ user_id: user.id, bow_type_id: bowTypeId, name: bowName, draw_weight: drawWeight, })
         };
         fetch(baseUserUrl + '/bow', requestOptions)
             .then(response => response.json())

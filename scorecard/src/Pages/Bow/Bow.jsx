@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import UserConext from '../../Components/User/User';
 import Confirmation from '../../Components/confirmation';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
@@ -7,10 +6,13 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/user/userSlice';
+import { selectBaseUrl } from '../../features/api/apiSlice';
+
 
 export default function Bow() {
     const {id} = useParams();
-    const session = useContext(UserConext);
     const [bow, setBow] = useState([]);
     const [bowTypes, setBowTypes] = useState([]);
     const navigate = useNavigate();
@@ -18,7 +20,9 @@ export default function Bow() {
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
-    const baseUserUrl = session.base_url + '/user/' + session.user.id;
+    const base_url = useSelector(selectBaseUrl);
+    const user = useSelector(selectUser);
+    const baseUserUrl = base_url + '/user/' + user.id;
     useEffect(() => {
         fetch( baseUserUrl + '/bow/' + id)
             .then(response => response.json())
@@ -31,7 +35,7 @@ export default function Bow() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch(session.base_url + '/bow-type')
+        fetch(base_url + '/bow-type')
           .then(response => response.json())
           .then(bowTypes => setBowTypes(bowTypes))
           .catch(error => console.error(error));
@@ -41,7 +45,7 @@ export default function Bow() {
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: bow.id, user_id: session.user.id, bow_type_id: bowTypeId, name: bowName, draw_weight: drawWeight, })
+            body: JSON.stringify({ id: bow.id, user_id: user.id, bow_type_id: bowTypeId, name: bowName, draw_weight: drawWeight, })
         };
         fetch(baseUserUrl + '/bow/' + bow.id, requestOptions)
             .then(response => response.json())
