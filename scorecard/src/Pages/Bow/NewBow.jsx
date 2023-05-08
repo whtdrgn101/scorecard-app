@@ -4,13 +4,14 @@ import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../features/user/userSlice';
-import { selectBaseUrl } from '../../features/api/apiSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser, selectBowTypeList, updateBowTypeList } from '../../reducers/user/userSlice';
+import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function NewBow() {
-    const [bowTypes, setBowTypes] = useState([]);
+    const bowTypes = useSelector(selectBowTypeList);
     const navigate = useNavigate();
+    const dispatcher = useDispatch();
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
@@ -19,9 +20,9 @@ export default function NewBow() {
     const baseUserUrl = base_url + '/user/' + user.id;
 
     useEffect(() => {
-        fetch(base_url + '/bow-type')
+        bowTypes || fetch(base_url + '/bow-type')
           .then(response => response.json())
-          .then(bowTypes => setBowTypes(bowTypes))
+          .then(bowTypes => dispatcher(updateBowTypeList(bowTypes)))
           .catch(error => console.error(error));
       }, []);
     
@@ -56,7 +57,7 @@ export default function NewBow() {
                     <Form.Label>Bow Type</Form.Label>
                     <Form.Select onChange={e => setBowTypeId(e.target.value)} value={bowTypeId}>
                         <option>Open this select menu</option>
-                        {bowTypes.map(btype => (
+                        {bowTypes && bowTypes.map(btype => (
                             <option key={`${btype.id}`} value={`${btype.id}`}>{btype.name}</option>                       
                             )
                         )}

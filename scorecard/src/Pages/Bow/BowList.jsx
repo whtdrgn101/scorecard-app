@@ -4,15 +4,15 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../features/user/userSlice';
-import { selectBaseUrl } from '../../features/api/apiSlice';
+import { selectUser } from '../../reducers/user/userSlice';
+import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 function BowList() {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
-    
+
     useEffect(() => {
         fetch(base_url + '/user/' + user.id + '/bow')
           .then(response => response.json())

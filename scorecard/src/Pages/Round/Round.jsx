@@ -7,8 +7,8 @@ import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../features/user/userSlice';
-import { selectBaseUrl } from '../../features/api/apiSlice';
+import { selectUser } from '../../reducers/user/userSlice';
+import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function Round() {
     const {id} = useParams();

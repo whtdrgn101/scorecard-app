@@ -5,8 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../features/user/userSlice';
-import { selectBaseUrl } from '../../features/api/apiSlice';
+import { selectUser } from '../../reducers/user/userSlice';
+import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function NewRound() {
     const [roundTypes, setRoundTypes] = useState([]);
