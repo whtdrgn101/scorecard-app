@@ -6,15 +6,16 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../reducers/user/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/user/userSlice';
 import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function Round() {
     const {id} = useParams();
     const [round, setRound] = useState([]);
-    const [roundTypes, setRoundTypes] = useState([]);
-    const [bows, setBows] = useState([]);
+    const bows = useSelector(selectBowList);
+    const roundTypes = useSelector(selectRoundTypeList);
+    const dispatcher = useDispatch();
     const navigate = useNavigate();
     const [showConfirmation, setShowConfirmation] = useState(false);
     var [roundDate, setRoundDate] = useState('')
@@ -23,6 +24,7 @@ export default function Round() {
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
     const baseUserUrl = base_url + '/user/' + user.id;
+    const bowListIsStale = useSelector(selectBowListIsStale);
 
     useEffect(() => {
         fetch( baseUserUrl + '/round/' + id)
@@ -36,14 +38,20 @@ export default function Round() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch(base_url + '/round-type')
+        roundTypes || fetch(base_url + '/round-type')
           .then(response => response.json())
-          .then(roundTypes => setRoundTypes(roundTypes))
+          .then(roundTypes => dispatcher(updateRoundTypeList(roundTypes)))
           .catch(error => console.error(error));
-        fetch(baseUserUrl + '/bow')
+
+        if( bowListIsStale == 'true' || bows == null) {
+            fetch(baseUserUrl + '/bow')
           .then(response => response.json())
-          .then(bows => setBows(bows))
+          .then(bows => {
+                dispatcher(updateBowList(bows));
+                dispatcher(updateBowListStale(false));
+            })
           .catch(error => console.error(error));
+        } 
       }, []);
     
     function save_round() {
@@ -89,7 +97,7 @@ export default function Round() {
                     <Form.Label>Round Type</Form.Label>
                     <Form.Select onChange={e => setRoundTypeId(e.target.value)} value={roundTypeId}>
                         <option>Open this select menu</option>
-                        {roundTypes.map(rtype => (
+                        {roundTypes && roundTypes.map(rtype => (
                             <option key={`${rtype.id}`} value={`${rtype.id}`}>{rtype.name}</option>                       
                         )
                         )}
@@ -100,7 +108,7 @@ export default function Round() {
                 <Form.Label>Bow</Form.Label>
                 <Form.Select onChange={e => setBowId(e.target.value)} value={bowId}>
                     <option>Open this select menu</option>
-                    {bows.map(bow => (
+                    {bows && bows.map(bow => (
                         <option key={`${bow.id}`} value={`${bow.id}`}>{bow.name}</option>                       
                     )
                     )}

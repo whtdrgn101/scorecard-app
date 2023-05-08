@@ -3,46 +3,41 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../reducers/user/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/user/userSlice';
 import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 function BowList() {
-    const [data, setData] = useState([]);
+    
     const navigate = useNavigate();
+    const dispatcher = useDispatch();
+    const bowList = useSelector(selectBowList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
+    const bowListIsStale = useSelector(selectBowListIsStale);
 
     useEffect(() => {
-        fetch(base_url + '/user/' + user.id + '/bow')
-          .then(response => response.json())
-          .then(data => setData(data))
-          .catch(error => console.error(error));
-      }, []);
+        
+        if( bowListIsStale == 'true' || bowList == null) {
+            fetch(base_url + '/user/' + user.id + '/bow')
+            .then(response => response.json())
+            .then(bowList => {
+                    dispatcher(updateBowList(bowList));
+                    dispatcher(updateBowListStale(false));
+                })
+            .catch(error => console.error(error));
+        }
+    }, []);
 
-    var bows = [];
-    if(data.length > 0) {
-        bows = data.map(bow => {
-            var created_date = new Date(bow.created_date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            var updated_date = new Date(bow.updated_date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-                });
-            return {
-                id: bow.id,
-                name: bow.name,
-                draw_weight: bow.draw_weight,
-                bow_type: bow.bow_type.name,
-                created_date: created_date,
-                updated_date: updated_date
-            }
-        });
+    function formatDate(uglyDate){
+        var dt = new Date(uglyDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        return dt;
     }
+
     return (
         <Container>
             <h3>Bows owned by {user.name}</h3>
@@ -58,13 +53,13 @@ function BowList() {
                     </tr>
                 </thead>
                 <tbody>
-                {bows.map(bow => (
+                {bowList && bowList.map(bow => (
                     <tr key={bow.id}>
                         <td><Link to={`/bow/${bow.id}`}>{bow.name}</Link></td>
-                        <td>{bow.bow_type}</td>
+                        <td>{bow.bow_type.name}</td>
                         <td>{bow.draw_weight}lbs</td>
-                        <td>{bow.created_date}</td>
-                        <td>{bow.updated_date}</td>
+                        <td>{formatDate(bow.created_date)}</td>
+                        <td>{formatDate(bow.updated_date)}</td>
                     </tr>                        
                 )
                 )}

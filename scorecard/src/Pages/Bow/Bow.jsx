@@ -6,23 +6,25 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser, selectBowTypeList, updateBowTypeList, updateBowListStale } from '../../reducers/user/userSlice';
+import { selectBaseUrl, update } from '../../reducers/api/apiSlice';
 
 
 export default function Bow() {
     const {id} = useParams();
     const [bow, setBow] = useState([]);
-    const [bowTypes, setBowTypes] = useState([]);
     const navigate = useNavigate();
+    const dispatcher = useDispatch();
     const [showConfirmation, setShowConfirmation] = useState(false);
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
+    const bowTypes = useSelector(selectBowTypeList);
     const baseUserUrl = base_url + '/user/' + user.id;
+
     useEffect(() => {
         fetch( baseUserUrl + '/bow/' + id)
             .then(response => response.json())
@@ -35,9 +37,9 @@ export default function Bow() {
                 } 
             })
             .catch(error => console.error(error));
-        fetch(base_url + '/bow-type')
+        bowTypes || fetch(base_url + '/bow-type')
           .then(response => response.json())
-          .then(bowTypes => setBowTypes(bowTypes))
+          .then(bowTypes => dispatcher(updateBowTypeList(bowTypes)))
           .catch(error => console.error(error));
       }, []);
     
@@ -50,6 +52,7 @@ export default function Bow() {
         fetch(baseUserUrl + '/bow/' + bow.id, requestOptions)
             .then(response => response.json())
             .then(new_bow => {
+                dispatcher(updateBowListStale(true));
                 navigate('/bows/');
             });
         return false;
@@ -70,6 +73,7 @@ export default function Bow() {
         fetch(baseUserUrl + '/bow/' + bow.id, requestOptions)
             .then(response => response.json())
             .then(new_bow => {
+                dispatcher(updateBowListStale(true));
                 navigate('/bows/');
             });
         return false;
@@ -88,8 +92,8 @@ export default function Bow() {
                 <Form.Group as={Col} className="mb-3" controlId="formGroupBowType">
                     <Form.Label>Bow Type</Form.Label>
                     <Form.Select onChange={e => setBowTypeId(e.target.value)} value={bowTypeId}>
-                        <option>Open this select menu</option>
-                        {bowTypes.map(btype => (
+                        <option>Select Type</option>
+                        {bowTypes && bowTypes.map(btype => (
                             <option key={`${btype.id}`} value={`${btype.id}`}>{btype.name}</option>                       
                             )
                         )}

@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser, selectBowTypeList, updateBowTypeList } from '../../reducers/user/userSlice';
+import { selectUser, selectBowTypeList, updateBowTypeList, updateBowListStale } from '../../reducers/user/userSlice';
 import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function NewBow() {
@@ -36,6 +36,7 @@ export default function NewBow() {
             .then(response => response.json())
             .then(new_bow => {
                 if(new_bow.id) {
+                    dispatcher(updateBowListStale(true));
                     navigate('/bows');
                 }
             });
@@ -56,7 +57,7 @@ export default function NewBow() {
                 <Form.Group as={Col} className="mb-3" controlId="formGroupBowType">
                     <Form.Label>Bow Type</Form.Label>
                     <Form.Select onChange={e => setBowTypeId(e.target.value)} value={bowTypeId}>
-                        <option>Open this select menu</option>
+                        <option>Select Type</option>
                         {bowTypes && bowTypes.map(btype => (
                             <option key={`${btype.id}`} value={`${btype.id}`}>{btype.name}</option>                       
                             )
