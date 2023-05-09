@@ -8,12 +8,17 @@ import { selectBaseUrl } from '../reducers/apiSlice';
 import { updateUser } from '../reducers/userSlice';
 
 export default function Login() {
+    
     const dispatch = useDispatch();
-    const base_url = useSelector(selectBaseUrl);
-    const authURL = base_url + '/auth/';
+    const navigate = useNavigate();
+    
+    //Component state
     const [email, setEmail] = useState([]);
     const [password, setPassword] = useState([]);
-    const navigate = useNavigate();
+    
+    //Redux state
+    const base_url = useSelector(selectBaseUrl);
+    const authURL = base_url + '/auth/';
     
     function login() {
         const requestOptions = {
