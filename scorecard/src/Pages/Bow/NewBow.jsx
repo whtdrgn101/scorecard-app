@@ -5,16 +5,21 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser, selectBowTypeList, updateBowTypeList, updateBowListStale } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { selectUser, selectBowTypeList, updateBowTypeList, updateBowListStale } from '../../reducers/userSlice';
+import { selectBaseUrl } from '../../reducers/apiSlice';
 
 export default function NewBow() {
-    const bowTypes = useSelector(selectBowTypeList);
+    
     const navigate = useNavigate();
     const dispatcher = useDispatch();
+    
+    //Component states
     var [bowName, setBowName] = useState('')
     var [drawWeight, setBowDrawWeight] = useState(0)
     var [bowTypeId, setBowTypeId] = useState(0);
+    
+    //Redux states
+    const bowTypes = useSelector(selectBowTypeList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
     const baseUserUrl = base_url + '/user/' + user.id;

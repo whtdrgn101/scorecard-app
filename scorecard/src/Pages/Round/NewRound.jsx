@@ -5,8 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, updateBowList, updateBowListStale, selectBowListIsStale } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, updateBowList, updateBowListStale, selectBowListIsStale } from '../../reducers/userSlice';
+import { selectBaseUrl } from '../../reducers/apiSlice';
 
 export default function NewRound() {
     
@@ -33,7 +33,7 @@ export default function NewRound() {
           .then(roundTypes => dispatcher(updateRoundTypeList(roundTypes)))
           .catch(error => console.error(error));
         //Grab bows if the list is stale or we don't have them
-        if( bowListIsStale == 'true' || bows == null) {
+        if( bowListIsStale == true || bows == null) {
             fetch(baseUserUrl + '/bow')
           .then(response => response.json())
           .then(bows => {

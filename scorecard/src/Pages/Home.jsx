@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../reducers/user/userSlice';
+import { selectUser } from '../reducers/userSlice';
 
 export default function Home() {
   const user = useSelector(selectUser);

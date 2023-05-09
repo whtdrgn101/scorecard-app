@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
-import { selectLoggedIn, logout } from '../reducers/user/userSlice';
+import { selectLoggedIn, logout } from '../reducers/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function Menu() {

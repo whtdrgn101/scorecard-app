@@ -7,20 +7,25 @@ import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router";
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/userSlice';
+import { selectBaseUrl } from '../../reducers/apiSlice';
 
 export default function Round() {
+    
     const {id} = useParams();
-    const [round, setRound] = useState([]);
-    const bows = useSelector(selectBowList);
-    const roundTypes = useSelector(selectRoundTypeList);
     const dispatcher = useDispatch();
     const navigate = useNavigate();
+    
+    //Local component states
     const [showConfirmation, setShowConfirmation] = useState(false);
-    var [roundDate, setRoundDate] = useState('')
-    var [roundTypeId, setRoundTypeId] = useState(0);
-    var [bowId, setBowId] = useState(0);
+    const [round, setRound] = useState([]);
+    const [roundDate, setRoundDate] = useState('')
+    const [roundTypeId, setRoundTypeId] = useState(0);
+    const [bowId, setBowId] = useState(0);
+
+    //Redux states
+    const bows = useSelector(selectBowList);
+    const roundTypes = useSelector(selectRoundTypeList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
     const baseUserUrl = base_url + '/user/' + user.id;
@@ -43,7 +48,7 @@ export default function Round() {
           .then(roundTypes => dispatcher(updateRoundTypeList(roundTypes)))
           .catch(error => console.error(error));
 
-        if( bowListIsStale == 'true' || bows == null) {
+        if( bowListIsStale == true || bows == null) {
             fetch(baseUserUrl + '/bow')
           .then(response => response.json())
           .then(bows => {

@@ -8,7 +8,7 @@ export const userSlice = createSlice({
     bowTypes: JSON.parse(localStorage.getItem("bowTypes")),
     roundTypes: JSON.parse(localStorage.getItem("roundTypes")),
     bowList: JSON.parse(localStorage.getItem("bowList")),
-    bowListIsStale: localStorage.getItem("bowListIsStale"),
+    bowListIsStale: (localStorage.getItem("bowListIsStale") === 'true'),
   },
   reducers: {
     updateBowTypeList: (state, action) => {

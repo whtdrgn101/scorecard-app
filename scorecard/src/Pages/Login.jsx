@@ -4,8 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectBaseUrl } from '../reducers/api/apiSlice';
-import { updateUser } from '../reducers/user/userSlice';
+import { selectBaseUrl } from '../reducers/apiSlice';
+import { updateUser } from '../reducers/userSlice';
 
 export default function Login() {
     const dispatch = useDispatch();

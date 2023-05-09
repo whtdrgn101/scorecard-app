@@ -5,12 +5,17 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { selectUser } from '../../reducers/userSlice';
+import { selectBaseUrl } from '../../reducers/apiSlice';
 
 function RoundList() {
-    const [data, setData] = useState([]);
+    
     const navigate = useNavigate();
+    
+    //Component states
+    const [data, setData] = useState([]);
+
+    //Redux states
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
 

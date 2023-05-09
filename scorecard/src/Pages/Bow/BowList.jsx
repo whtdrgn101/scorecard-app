@@ -4,13 +4,15 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/user/userSlice';
-import { selectBaseUrl } from '../../reducers/api/apiSlice';
+import { selectUser, selectBowList, updateBowList, selectBowListIsStale, updateBowListStale } from '../../reducers/userSlice';
+import { selectBaseUrl } from '../../reducers/apiSlice';
 
 function BowList() {
     
     const navigate = useNavigate();
     const dispatcher = useDispatch();
+
+    //Redux state
     const bowList = useSelector(selectBowList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
@@ -18,7 +20,7 @@ function BowList() {
 
     useEffect(() => {
         
-        if( bowListIsStale == 'true' || bowList == null) {
+        if( bowListIsStale == true || bowList == null) {
             fetch(base_url + '/user/' + user.id + '/bow')
             .then(response => response.json())
             .then(bowList => {

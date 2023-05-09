@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer from './reducers/user/userSlice';
-import apiReducer from './reducers/api/apiSlice';
+import userReducer from './reducers/userSlice';
+import apiReducer from './reducers/apiSlice';
 
 
 export default configureStore({
