@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form';
@@ -9,24 +9,30 @@ import { selectUser, selectRoundTypeList, updateRoundTypeList, selectBowList, up
 import { selectBaseUrl } from '../../reducers/api/apiSlice';
 
 export default function NewRound() {
-    const bows = useSelector(selectBowList);
-    const bowListIsStale = useSelector(selectBowListIsStale);
-    const roundTypes = useSelector(selectRoundTypeList);
+    
     const navigate = useNavigate();
     const dispatcher = useDispatch();
+    
+    //Local component states
     var [roundDate, setRoundDate] = useState('')
     var [roundTypeId, setRoundTypeId] = useState(0);
     var [bowId, setBowId] = useState(0);
+    
+    //Redux states
+    const bows = useSelector(selectBowList);
+    const bowListIsStale = useSelector(selectBowListIsStale);
+    const roundTypes = useSelector(selectRoundTypeList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
     const baseUserUrl = base_url + '/user/' + user.id;
 
     useEffect(() => {
+        //Only fetch round types if we don't have them from the redux state
         roundTypes || fetch(base_url + '/round-type')
           .then(response => response.json())
           .then(roundTypes => dispatcher(updateRoundTypeList(roundTypes)))
           .catch(error => console.error(error));
-        
+        //Grab bows if the list is stale or we don't have them
         if( bowListIsStale == 'true' || bows == null) {
             fetch(baseUserUrl + '/bow')
           .then(response => response.json())
