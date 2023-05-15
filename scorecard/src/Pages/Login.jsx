@@ -18,7 +18,7 @@ export default function Login() {
     
     //Redux state
     const base_url = useSelector(selectBaseUrl);
-    const authURL = base_url + '/auth/';
+    const authURL = base_url + '/auth';
     
     function login() {
         const requestOptions = {

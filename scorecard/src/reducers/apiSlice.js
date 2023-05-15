@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const apiSlice = createSlice({
   name: 'api',
   initialState: {
-    base_url: "http://localhost:8000"
+    base_url: "http://192.168.49.2:30009"
   },
   reducers: {
     update: (state, action) => {

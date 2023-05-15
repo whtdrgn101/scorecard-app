@@ -19,7 +19,7 @@ export default function Registration() {
     
     //Redux state
     const base_url = useSelector(selectBaseUrl);
-    const userURL = base_url + '/user/';
+    const userURL = base_url + '/user';
 
     function register() {
         const requestOptions = {
