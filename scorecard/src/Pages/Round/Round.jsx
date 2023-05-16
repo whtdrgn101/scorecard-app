@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Confirmation from '../../Components/confirmation';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row'
@@ -36,8 +36,8 @@ export default function Round() {
     const roundTypes = useSelector(selectRoundTypeList);
     const base_url = useSelector(selectBaseUrl);
     const user = useSelector(selectUser);
-    const baseUserUrl = base_url + '/user/' + user.id;
     const bowListIsStale = useSelector(selectBowListIsStale);
+    const baseUserUrl = base_url + '/user/' + user.id;
 
     useEffect(() => {
         getRound();
@@ -69,7 +69,9 @@ export default function Round() {
                 }
             })
             .catch(error => console.error(error));
+        return true;
     }
+
     function saveRound() {
         const requestOptions = {
             method: 'PUT',
@@ -83,25 +85,13 @@ export default function Round() {
             });
         return false;
     }
+    
     function deleteRound() {
         setShowRoundConfirmation(true);
     }
-    function deleteEnd(endId) {
-        setActiveEnd(endId);
-        setShowEndConfirmation(true);
-    }
-
-    function editEnd(endId, score) {
-        setActiveEnd(endId);
-        setActiveEndScore(score);
-        setEndEditTitle("Editting End");
-        setShowEndEdit(true);
-    }
+    
     function onRoundCancelHandler() {
         setShowRoundConfirmation(false);
-    }
-    function onEndCancelHandler() {
-        setShowEndConfirmation(false);
     }
 
     function onRoundConfirmHandler() {
@@ -114,7 +104,19 @@ export default function Round() {
             .then(round_status => {
                 setShowEndConfirmation(false);
             });
-        return false;
+        return true;
+    }
+
+    /**
+     * END DELETE
+     */
+    function deleteEnd(endId) {
+        setActiveEnd(endId);
+        setShowEndConfirmation(true);
+    }
+
+    function onEndCancelHandler() {
+        setShowEndConfirmation(false);
     }
 
     function onEndConfirmHandler() {
@@ -124,17 +126,32 @@ export default function Round() {
         };
         fetch(baseUserUrl + '/round/' + round.id + '/end/' + activeEnd, requestOptions)
             .then(response => response.json())
-            .then(round_status => { getRound(); })
-            .then(round_status => { setShowEndConfirmation(false); });
-        return false;
+            .then(result => { return getRound(); })
+            .then(result => { setShowEndConfirmation(false); });
+        return true;
     }
 
+    /**
+     * END ADD/EDIT
+     */
     function newEnd() {
         setActiveEnd(0);
         setActiveEndScore(0);
         setEndEditTitle("Adding New End");
         setShowEndEdit(true);
     }
+
+    function editEnd(endId, score) {
+        setActiveEnd(endId);
+        setActiveEndScore(score);
+        setEndEditTitle("Editting End");
+        setShowEndEdit(true);
+    }
+
+    function onEndEditClose() {
+        setShowEndEdit(false);
+    }
+
     function onEndEditConfirm() {
         var end = { round_id: round.id, score: activeEndScore };
         var method = "POST";
@@ -145,21 +162,21 @@ export default function Round() {
             method = "PUT";
             url = url + '/' + activeEnd;
         }
-        
+
         const requestOptions = {
             method: method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(end)
         };
+        
         fetch(url, requestOptions)
             .then(response => response.json())
-            .then(new_round => { getRound(); })
+            .then(result => { getRound(); })
             .then(new_round => { setShowEndEdit(false); });
+        
+        return true;
     }
 
-    function onEndEditClose() {
-        setShowEndEdit(false);
-    }
     return (
         <Form>
             <Row>
@@ -222,12 +239,15 @@ export default function Round() {
                     Cancel
                 </Button>
             </Row>
+            
             <Confirmation message="Are you sure you want to delete this round?"
                 title="Delete Round Confirmation" show={showRoundConfirmation} confirmButtonText="Delete Round?"
                 onCancel={onRoundCancelHandler} onConfirm={onRoundConfirmHandler} />
+            
             <Confirmation message="Are you sure you want to delete this end?"
                 title="Delete End Confirmation" show={showEndConfirmation} confirmButtonText="Delete End?"
                 onCancel={onEndCancelHandler} onConfirm={onEndConfirmHandler} />
+            
             <Modal show={showEndEdit} onHide={onEndEditClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{endEditTitle}</Modal.Title>
@@ -239,12 +259,8 @@ export default function Round() {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onEndEditClose}>
-                    Close
-                    </Button>
-                    <Button variant="primary" onClick={onEndEditConfirm}>
-                    Save End
-                    </Button>
+                    <Button variant="secondary" onClick={onEndEditClose}>Close</Button>
+                    <Button variant="primary" onClick={onEndEditConfirm}>Save End</Button>
                 </Modal.Footer>
             </Modal>
         </Form>
