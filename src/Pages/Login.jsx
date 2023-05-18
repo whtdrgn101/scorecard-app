@@ -40,13 +40,13 @@ export default function Login() {
     return (
         <Form>
             <Row>
-                <Form.Group  className="mb-3" controlId="formGroupBowName">
+                <Form.Group  className="mb-3" controlId="formGroupEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="text" placeholder="Enter your email address" value={email} onChange={e => setEmail(e.target.value)}/>
                 </Form.Group>
             </Row>
             <Row>
-                <Form.Group  className="mb-3" controlId="formGroupBowName">
+                <Form.Group  className="mb-3" controlId="formGroupPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)}/>
                 </Form.Group>
